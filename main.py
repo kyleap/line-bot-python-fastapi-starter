@@ -5,20 +5,9 @@ from dotenv import load_dotenv
 from fastapi.params import Header
 from starlette.requests import Request
 from models.message_request import MessageRequest
-
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-
-from linebot.exceptions import (
-    InvalidSignatureError
-)
-
-from linebot.models import (
-    MessageEvent, TextMessage
-)
-
-
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage
 from skills import *
 from skills import skills
 
@@ -34,7 +23,7 @@ def get_message(request: MessageRequest):
         if re.match(pattern, request.intent):
             return skill(request)
     request.intent = '{not_match}'
-    return skill(request)
+    return skills['{not_match}'](request)
 
 @app.post("/api/line")
 async def callback(request: Request, x_line_signature: str = Header(None)):
